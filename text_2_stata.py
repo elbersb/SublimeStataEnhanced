@@ -51,7 +51,7 @@ def strip_inline_comments(text):
 
 def get_stata_version(stata_name):
     if stata_name != "auto": # get application identifier for user-set Stata
-        cmd = ["osascript", "-e", "return id of application \"{}\"".format(stata_name)]
+        cmd = ["osascript", "-e", "return id of application \"{0}\"".format(stata_name)]
         try:
             stata_app_id = subprocess.check_output(cmd)
         except subprocess.CalledProcessError:
@@ -89,7 +89,7 @@ def get_stata_version(stata_name):
             raise Exception("No version of Stata found.")
 
         version = version.decode("utf-8").strip()
-        return((int(version), "com.stata.stata{}".format(version)))
+        return((int(version), "com.stata.stata{0}".format(version)))
 
 
 class StataRunCompleteCommand(sublime_plugin.WindowCommand):
@@ -111,9 +111,9 @@ class StataRunCompleteCommand(sublime_plugin.WindowCommand):
 
         if sublime.platform() == "osx" and version >= 13:
             cmd = """osascript<< END
-                 tell application id "{}"
-                    {}
-                    DoCommandAsync "do \\\"{}\\\"" with addToReview
+                 tell application id "{0}"
+                    {1}
+                    DoCommandAsync "do \\\"{2}\\\"" with addToReview
                  end tell
                  END""".format(stata_app_id, switch_focus, file_name)
             os.system(cmd)
@@ -175,9 +175,9 @@ class text_2_stataCommand(sublime_plugin.TextCommand):
             if len(all_text)<8192:
                 # Send the command to Stata with AppleScript
                 cmd = """osascript<< END
-                 tell application id "{}"
-                    {}
-                    DoCommandAsync "{}" with addToReview
+                 tell application id "{0}"
+                    {1}
+                    DoCommandAsync "{2}" with addToReview
                  end tell
                  END""".format(stata_app_id, switch_focus, all_text)
                 print(cmd)
